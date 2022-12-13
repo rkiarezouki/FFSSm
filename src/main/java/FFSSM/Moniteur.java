@@ -4,15 +4,17 @@
 package FFSSM;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Moniteur extends Plongeur {
 
     public int numeroDiplome;
+    public ArrayList<Embauche> embauches = new ArrayList<Embauche>();
+    public Moniteur(String numeroINSEE, String nom, String prenom, String adresse, String telephone, LocalDate naissance, int numeroDiplome, int niveau, GroupeSanguin groupeSanguin) {
+        super(numeroINSEE, nom, prenom, adresse, telephone, naissance, niveau, groupeSanguin);
 
-    public Moniteur(String numeroINSEE, String nom, String prenom, String adresse, String telephone, LocalDate naissance, int numeroDiplome) {
-        super(numeroINSEE, nom, prenom, adresse, telephone, naissance);
         this.numeroDiplome = numeroDiplome;
     }
 
@@ -22,8 +24,18 @@ public class Moniteur extends Plongeur {
      * @return l'employeur actuel de ce moniteur sous la forme d'un Optional
      */
     public Optional<Club> employeurActuel() {
-         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+       Club res = null;
+       if(!embauches.isEmpty()){
+           Embauche emb = embauches.get(embauches.size()-1);
+           res = emb.getEmployeur();
+           if(emb.estTerminee()){
+               res = null;
+           }
+
+       }
+
+       Optional <Club> oc = Optional.ofNullable(res);
+       return oc;
     }
     
     /**
@@ -32,13 +44,21 @@ public class Moniteur extends Plongeur {
      * @param debutNouvelle la date de début de l'embauche
      */
     public void nouvelleEmbauche(Club employeur, LocalDate debutNouvelle) {   
-         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");	    
+       if(!embauches.isEmpty()){
+           this.terminerEmbauche(debutNouvelle);
+           embauches.add(new Embauche(debutNouvelle, this, employeur));
+       }
     }
 
     public List<Embauche> emplois() {
-         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        return embauches;
+    }
+
+    public void  terminerEmbauche(LocalDate fin){
+        if(!embauches.get(embauches.size()-1).estTerminee()){
+
+            embauches.get(embauches.size()-1).setFin(fin);
+        }
     }
 
 }

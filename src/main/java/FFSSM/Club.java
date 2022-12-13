@@ -3,6 +3,7 @@
  */
 package FFSSM;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +17,13 @@ public class Club {
     public String adresse;
 
     public String telephone;
+    public Set<Plongee> activites = new HashSet<Plongee>();
 
-    public Club(Moniteur président, String nom, String telephone) {
+    public Set<Licence> licencesDelivrees = new HashSet<Licence>();
+    public Club(Moniteur président, String nom,String adresse, String telephone) {
         this.president = président;
         this.nom = nom;
+        this.adresse = adresse;
         this.telephone = telephone;
     }
 
@@ -30,18 +34,28 @@ public class Club {
      * @return l'ensemble des plongées non conformes
      */
     public Set<Plongee> plongeesNonConformes() {
-         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
-    }
+        Set<Plongee> res = new HashSet<Plongee>();
+            for(Plongee p : activites){
+                if(!p.estConforme()){
+                    res.add(p);
+                }
+            }
+            return res;
+        }
+
 
     /**
      * Enregistre une nouvelle plongée organisée par ce club
      * @param p la nouvelle plongée
      */
     public void organisePlongee(Plongee p) {
-         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+         activites.add(p);
     }
+
+    public void ajouterLicence(Licence l){
+        licencesDelivrees.add(l);
+    }
+
     
     
     public Moniteur getPresident() {
@@ -81,4 +95,11 @@ public class Club {
         return "Club{" + "président=" + president + ", nom=" + nom + ", adresse=" + adresse + ", telephone=" + telephone + '}';
     }
 
+    public HashSet<Licence> getLicence() {
+        return (HashSet<Licence>) licencesDelivrees;
+    }
+
+    public HashSet<Plongee> getActivite() {
+        return (HashSet<Plongee>) activites;
+    }
 }
